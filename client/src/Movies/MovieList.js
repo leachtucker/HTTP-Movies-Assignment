@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import MovieCard from "./MovieCard";
 
 function MovieList({ movies }) {
+
   return (
-    <div className="movie-list">
+    <div className="movie-list save-wrapper">
       {
         movies.map(movie => (
           <Link key={movie.id} to={`/movies/${movie.id}`}>

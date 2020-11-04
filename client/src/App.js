@@ -4,28 +4,30 @@ import SavedList from "./Movies/SavedList";
 import MovieList from "./Movies/MovieList";
 import Movie from "./Movies/Movie";
 import UpdateMovieForm from './Movies/UpdateMovieForm';
-import axios from 'axios';
+import AddMovieForm from './Movies/AddMovieForm';
+
+import { getMovieList } from './api/getMovieList';
 
 import '../node_modules/bulma/css/bulma.min.css';
 
 const App = () => {
   const [savedList, setSavedList] = useState([]);
   const [movieList, setMovieList] = useState([]);
-
-  const getMovieList = () => {
-    axios
-      .get("http://localhost:5000/api/movies")
-      .then(res => setMovieList(res.data))
-      .catch(err => console.log(err.response));
-  };
+  const [requestMade, setRequestMade] = useState(false);
 
   const addToSavedList = movie => {
     setSavedList([...savedList, movie]);
   };
 
   useEffect(() => {
-    getMovieList();
-  }, []);
+    getMovieList()
+      .then(res => {
+        setMovieList(res.data);
+      })
+      .catch(err => {
+        console.log(err.response);
+      });
+  }, [requestMade, ]);
 
   return (
     <>
@@ -40,7 +42,11 @@ const App = () => {
       </Route>
 
       <Route path="/update-movie/:id">
-        <UpdateMovieForm />
+        <UpdateMovieForm setRequestMade={setRequestMade} />
+      </Route>
+
+      <Route path="/add-movie">
+        <AddMovieForm setRequestMade={setRequestMade} />
       </Route>
     </>
   );

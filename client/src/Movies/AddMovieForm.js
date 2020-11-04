@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
-import { fetchMovie } from '../api/fetchMovie';
-import { putMovie } from '../api/putMovie';
-
-import { Circle } from 'react-spinners-css';
+import { postMovie } from '../api/postMovie';
 
 const initialFormValues = {
     title: "",
@@ -13,41 +10,25 @@ const initialFormValues = {
     stars: []
 };
 
-const UpdateMovieForm = ({ setRequestMade }) => {
-    const params = useParams();
-    const { push } = useHistory();
-    const id = params.id;
-
+const AddMovieForm = ({ setRequestMade }) => {
     const [formValues, setFormValues] = useState(initialFormValues);
-    const [movie, setMovie] = useState();
-
-    useEffect(() => {
-        fetchMovie(id)
-            .then(res => {
-                setMovie(res.data);
-                setFormValues({ title: res.data.title, director: res.data.director, metascore: res.data.metascore, stars: res.data.stars });
-            })
-            .catch(err => {
-                console.log(err.response);
-            });
-    }, []);
+    const { push } = useHistory();
 
     const onSubmit = evt => {
         evt.preventDefault();
 
-        putMovie(id, {...formValues})
+        postMovie({...formValues})
             .then(res => {
                 setFormValues(initialFormValues);
                 setRequestMade(true);
-                push(`/movies/${id}`);
+                push('/');
             })
-            .catch(err => {
-                console.log(err.response);
-            })
+            .catch(err => console.log(err.response));
     };
 
     const onChange = evt => {
-        // The stars input needs to be split and converted to an array before storing it in state
+        evt.preventDefault();
+
         if (evt.target.name === "stars") {
             const stars = evt.target.value.split(', ');
             setFormValues({ ...formValues, stars: stars });
@@ -56,19 +37,10 @@ const UpdateMovieForm = ({ setRequestMade }) => {
         }
     };
 
-    if (!movie) {
-        return (
-            <div className="container has-text-centered">
-                <Circle size={32} />
-            </div>
-        );
-    }
-
     return (
-        <div className='box save-wrapper'>
+        <div className="box save-wrapper">
             <div className="has-text-centered">
-                <h2 className="title is-5">Update Movie</h2>
-                <h3 className="subtitle is-7 highlighted tag is-info">{movie.title}</h3>
+                <h2 className="title is-5">Add Movie</h2>
             </div>
             <form onSubmit={onSubmit}>
                 <div className="field">
@@ -104,7 +76,7 @@ const UpdateMovieForm = ({ setRequestMade }) => {
                         </button>
                     </p>
                     <p className="control center">
-                        <button className="button is-light" onClick={() => push(`/movies/${id}`)}>
+                        <button className="button is-light" onClick={() => push(`/`)}>
                             Cancel
                         </button>
                     </p>
@@ -114,4 +86,4 @@ const UpdateMovieForm = ({ setRequestMade }) => {
     );
 };
 
-export default UpdateMovieForm;
+export default AddMovieForm;
