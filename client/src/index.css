@@ -61,7 +61,15 @@ body {
   padding: 5px 10px;
   background-color: lightseagreen;
 }
-.save-button:hover {
+.edit-button {
+  position: absolute;
+  top: 60px;
+  right: 33px;
+  border: 1px solid grey;
+  padding: 5px 10px;
+  background-color: lightseagreen;
+}
+.button:hover {
   background-color: green;
   color: white;
 }
@@ -74,4 +82,15 @@ body {
 .movie-warning {
   color: red;
   text-align: center;
+}
+
+form {
+  margin-top: 20px !important;
+  margin: 0 auto;
+  width: 60%;
+}
+
+.center {
+  display: inline-block;
+  margin: 0 auto !important;
 }
